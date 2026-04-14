@@ -170,9 +170,10 @@ function drawCertificate(student) {
   //   "Won first rank" = 577 to 862
   //   "second rank"    = 970 to 1199
 
-  const sx = W / 1361;  // scale to actual image width (1361px)
-  const lY = H * 0.444; // y=348 on 784px height
-  const lW = Math.max(2, H * 0.008);
+  const sx   = W / 1361;
+  const lY   = Math.round(H * 0.444);
+  const lW   = Math.max(2, Math.round(H * 0.008));
+  const half = Math.floor(lW / 2);
 
   ctx.save();
   ctx.strokeStyle = '#1a1a3e';
@@ -181,20 +182,29 @@ function drawCertificate(student) {
 
   function strike(x1, x2) {
     ctx.beginPath();
-    ctx.moveTo(x1 * sx, lY);
-    ctx.lineTo(x2 * sx, lY);
+    ctx.moveTo(Math.round(x1 * sx), lY);
+    ctx.lineTo(Math.round(x2 * sx), lY);
     ctx.stroke();
   }
 
+  function strikeParticipated() {
+    strike(362, 560);
+    const gx1 = Math.round(362 * sx);
+    const gx2 = Math.round(435 * sx);
+    const y0  = lY - half;
+    const yh  = lW + 2;
+    ctx.drawImage(IMG, gx1, y0, gx2 - gx1, yh, gx1, y0, gx2 - gx1, yh);
+  }
+
   if (student.rank === 1) {
-    strike(408, 564);    // participated/ (centered, avoids "successfully")
-    strike(968, 1202);   // second rank
+    strikeParticipated();
+    strike(968, 1202);
   } else if (student.rank === 2) {
-    strike(408, 564);    // participated/ (centered, avoids "successfully")
-    strike(577, 870);    // Won first rank
+    strikeParticipated();
+    strike(577, 870);
   } else {
-    strike(577, 870);    // Won first rank
-    strike(968, 1202);   // second rank
+    strike(577, 870);
+    strike(968, 1202);
   }
 
   ctx.restore();
