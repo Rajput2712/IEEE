@@ -154,19 +154,28 @@ function drawCertificate(student) {
   ctx.restore();
 
   // ── STRIKETHROUGHS on rank line ──
-  // Full line: "has successfully participated/ Won first rank /second rank"
-  // Image native size: 1366 x 768
-  // Measured x-positions (1366px base):
-  //   "participated/"  : x 390 → 570   (after "has successfully ")
-  //   "Won first rank" : x 590 → 800   (the whole Won first rank chunk)
-  //   "second rank"    : x 823 → 1010
-  // Line sits at y ≈ 43.5% of height
-  const sx = W / 1366;
-  const lY = H * 0.435;
-  const lW = Math.max(2, H * 0.009);
+  // Image actual size: 1361 x 784
+  // Pixel-measured segments at y=348:
+  //   seg0 "has"                : 184 - 232
+  //   seg1 "successfully"       : 250 - 333   (gap ~334-358)
+  //   seg2 "participated/"      : 360 - 560
+  //   seg3 "Won"                : 577 - 694
+  //   seg4 "first rank"         : 714 - 862
+  //   seg5 "/"                  : 881 - 948
+  //   seg6 "second"             : 970 - 1025
+  //   seg7 "rank"               : 1042 - 1199
+  //
+  // Strike targets:
+  //   "participated/"  = 360 to 560
+  //   "Won first rank" = 577 to 862
+  //   "second rank"    = 970 to 1199
+
+  const sx = W / 1361;  // scale to actual image width (1361px)
+  const lY = H * 0.444; // y=348 on 784px height
+  const lW = Math.max(2, H * 0.008);
 
   ctx.save();
-  ctx.strokeStyle = '#1a1a3e';  // dark navy, suits the certificate
+  ctx.strokeStyle = '#1a1a3e';
   ctx.lineWidth = lW;
   ctx.lineCap = 'butt';
 
@@ -178,17 +187,14 @@ function drawCertificate(student) {
   }
 
   if (student.rank === 1) {
-    // keep "Won first rank", strike "participated/" and "second rank"
-    strike(390, 570);   // participated/
-    strike(823, 1010);  // second rank
+    strike(375, 562);    // participated/
+    strike(968, 1202);   // second rank
   } else if (student.rank === 2) {
-    // keep "second rank", strike "participated/" and "Won first rank"
-    strike(390, 570);   // participated/
-    strike(590, 800);   // Won first rank
+    strike(375, 562);    // participated/
+    strike(577, 870);    // Won first rank
   } else {
-    // keep "participated/", strike "Won first rank" and "second rank"
-    strike(590, 800);   // Won first rank
-    strike(823, 1010);  // second rank
+    strike(577, 870);    // Won first rank
+    strike(968, 1202);   // second rank
   }
 
   ctx.restore();
