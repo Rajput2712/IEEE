@@ -86,7 +86,7 @@ const STUDENTS = [
 
 const IMG = new Image();
 IMG.crossOrigin = "anonymous";
-IMG.src = "1000094831.png";
+IMG.src = "1777309748123.png";
 
 let current = null;
 
@@ -134,49 +134,13 @@ function drawCert(s) {
   canvas.height = H;
   ctx.drawImage(IMG, 0, 0, W, H);
 
-  // Name on the blank underline (~38.3% height, centered)
+  // Name on the blank underline — centered, ~38.3% height
   ctx.save();
   ctx.font = `bold ${Math.round(W * 0.046)}px 'Dancing Script', cursive`;
   ctx.fillStyle = '#1a1a6e';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(s.name, W * 0.5, H * 0.383);
-  ctx.restore();
-
-  // Strikethroughs
-  // Native image: 1361 x 784
-  // Verified segments:
-  //   "participated/" strike: starts at x=563 (after full "successfully participated" block)
-  //                           length=170px => ends at 733
-  //   "Won first rank":       577 to 870
-  //   "second rank":          968 to 1202
-  const sx  = W / 1361;
-  const lY  = Math.round(H * 0.444);
-  const lW  = Math.max(2, Math.round(H * 0.008));
-
-  ctx.save();
-  ctx.strokeStyle = '#1a1a3e';
-  ctx.lineWidth = lW;
-  ctx.lineCap = 'butt';
-
-  function strike(x1, x2) {
-    ctx.beginPath();
-    ctx.moveTo(Math.round(x1 * sx), lY);
-    ctx.lineTo(Math.round(x2 * sx), lY);
-    ctx.stroke();
-  }
-
-  if (s.rank === 1) {
-    strike(563, 733);   // participated/ — starts after "successfully", clean
-    strike(968, 1202);  // second rank
-  } else if (s.rank === 2) {
-    strike(563, 733);   // participated/
-    strike(577, 870);   // Won first rank
-  } else {
-    strike(577, 870);   // Won first rank
-    strike(968, 1202);  // second rank
-  }
-
   ctx.restore();
 
   const dl = document.getElementById('dl-btn');
@@ -210,6 +174,13 @@ function loadFromURL() {
     return true;
   }
   return false;
+}
+
+buildList();
+loadFromURL();
+</script>
+</body>
+</html>
 }
 
 buildList();
